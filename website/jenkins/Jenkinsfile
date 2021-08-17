@@ -1,0 +1,25 @@
+pipeline {
+    agent {
+        docker {
+            image 'node:lts-buster-slim' 
+            args '-p 3000:3000' 
+        }
+    }
+    stages {
+        stage('Build') { 
+            steps {
+                sh './website/jenkins/scripts/build.sh'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh './website/jenkins/scripts/test.sh'
+            }
+        }
+        stage('Deliver') { 
+            steps {
+                sh './website/jenkins/scripts/deliver.sh'
+            }
+        }
+    }
+}

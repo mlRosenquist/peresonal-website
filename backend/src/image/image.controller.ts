@@ -46,7 +46,7 @@ export class ImageController {
             return await this.imageService.create(file);
         }
         catch (e){
-            throw new HttpException('Could not create fil', HttpStatus.BAD_REQUEST)
+            throw new HttpException('Could not create file', HttpStatus.BAD_REQUEST)
         }
     }
 }
