@@ -12,17 +12,17 @@ pipeline {
         stage('Build') { 
             steps {
                 sh "chmod +x -R ${env.WORKSPACE}"
-                sh './website/jenkins/scripts/build.sh'
+                sh './jenkins/scripts/build.sh'
             }
         }
         stage('Test') {
             steps {
-                sh './website/jenkins/scripts/test.sh'
+                sh './jenkins/scripts/test.sh'
             }
         }
         stage('Deliver') { 
             steps {
-                sh './website/jenkins/scripts/deliver.sh'
+                sh './jenkins/scripts/deliver.sh'
             }
         }
     }
