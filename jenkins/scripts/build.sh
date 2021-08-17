@@ -1,1 +1,1 @@
-cd website && npm install
+npm install
