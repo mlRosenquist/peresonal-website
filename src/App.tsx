@@ -5,7 +5,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>
-          Edit <code>src/App.tsx</code> and save to reload Hej morten.
+          Edit <code>src/App.tsx</code> and save to reload DWQD.
         </p>
         <a
           className="App-link"
