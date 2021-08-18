@@ -1,14 +1,12 @@
-import { AppBar, Grid } from "@material-ui/core";
+import {  Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
 
-import dog from '../dog.png'
 
 import {
-  BrowserRouter as Router,
+
   Switch,
   Route,
-  Link
+
 } from "react-router-dom";
 import Header from "./Header";
 import About from "./About";
