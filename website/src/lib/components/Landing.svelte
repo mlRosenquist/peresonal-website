@@ -1,6 +1,0 @@
-<main>
-	
-</main>
-
-<style>
-</style>
