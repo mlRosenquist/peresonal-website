@@ -1,6 +1,6 @@
 <script>
 	import HomeIcon from './HomeIcon.svelte';
-import ThemeToggle from './ThemeToggle.svelte';
+	import ThemeToggle from './ThemeToggle.svelte';
 
 	const routes = [
 		{ url: '/about', name: 'About' },
@@ -14,8 +14,7 @@ import ThemeToggle from './ThemeToggle.svelte';
 	id="header"
 	class="fixed left-[48px] top-[48px] bottom-[48px] w-[48px] flex flex-col space-y-12 items-center"
 >
-	
-	<HomeIcon></HomeIcon>
+	<HomeIcon />
 	<nav class="flex flex-col h-full justify-between">
 		<div class="flex flex-col space-y-16">
 			<a href="/#timeline">
@@ -81,11 +80,14 @@ import ThemeToggle from './ThemeToggle.svelte';
 		height: 4px;
 		width: 100%; /* Full width */
 		background-color: rgb(76, 204, 204);
-		animation: outAnimation 0.3s forwards;
+		transform: scaleX(0);
+		transform-origin: right;
+		transition: transform 0.3s ease-in-out;
 	}
 
 	p:hover::after {
-		animation: inAnimation 0.3s forwards;
+		transform: scaleX(1);
+		transform-origin: left;
 	}
 
 	@keyframes inAnimation {
@@ -113,6 +115,4 @@ import ThemeToggle from './ThemeToggle.svelte';
 	svg {
 		@apply fill-[rgba(0,0,0,0.6)] hover:fill-[rgb(76,204,204)] hover:ease-in-out transition duration-300;
 	}
-
-	
 </style>
