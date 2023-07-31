@@ -9,7 +9,10 @@
 	];
 </script>
 
-<header id="header" class="fixed left-[48px] top-[48px] w-[48px]">
+<header
+	id="header"
+	class="fixed left-[48px] top-[48px] bottom-[48px] w-[48px] flex flex-col space-y-12 items-center"
+>
 	<a href="/#intro">
 		<svg
 			class="w-6 h-6 text-gray-800 dark:text-white"
@@ -24,8 +27,8 @@
 		</svg></a
 	>
 
-	<nav>
-		<div>
+	<nav class="flex flex-col h-full justify-between">
+		<div class="flex flex-col space-y-16">
 			<a href="/#timeline">
 				<p>Timeline</p>
 			</a>
@@ -40,7 +43,7 @@
 			</a>
 		</div>
 
-		<div>
+		<div class="flex flex-col space-y-4 items-center">
 			<a href="https://twitter.com">
 				<svg
 					class="w-6 h-6 text-gray-800 dark:text-white"
@@ -78,6 +81,23 @@
 
 <style lang="postcss">
 	p {
-		@apply rotate-90;
+		@apply rotate-[270deg] ;
+	}
+
+	p:hover::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 45%;
+		height: 4px; /* you can set this as you need */
+		width: 95%;
+		@apply hover:ease-in-out transition duration-1000 bg-[rgb(76,204,204)];
+	}
+
+	svg {
+		@apply fill-[rgba(0,0,0,0.6)] hover:fill-[rgb(76,204,204)] hover:ease-in-out transition duration-300;
+	}
+
+	:global(body.dark) .homeIcon {
 	}
 </style>
