@@ -5,6 +5,8 @@ export const rgbToThreeColor = (rgb: any) =>
 	 * Clean up and dispose of a renderer
 	 */
 	export const cleanRenderer = (renderer: any) => {
+		if(!renderer) return;
+
 		renderer.dispose();
 		renderer = null;
 	};
@@ -46,6 +48,8 @@ export const rgbToThreeColor = (rgb: any) =>
 	 * Clean up lights by removing them from their parent
 	 */
 	export const removeLights = (lights: any) => {
+		if(!lights) return;
+
 		for (const light of lights) {
 			light.parent.remove(light);
 		}

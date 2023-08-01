@@ -12,7 +12,7 @@
 
 <header
 	id="header"
-	class="fixed left-[48px] top-[48px] bottom-[48px] w-[48px] flex flex-col space-y-12 items-center"
+	class="fixed left-[48px] top-[48px] bottom-[48px] w-[48px] flex flex-col space-y-12 items-center z-50"
 >
 	<HomeIcon />
 	<nav class="flex flex-col h-full justify-between">

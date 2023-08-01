@@ -13,7 +13,7 @@
 
 <button
 	id="theme-toggle"
-	class="fixed right-[48px] top-[48px] p-0 w-[48px] h-[48px] flex items-center justify-center rounded-full hover:bg-gray-300/25 focus:ring-0"
+	class="fixed right-[48px] top-[48px] p-0 w-[48px] h-[48px] flex items-center justify-center rounded-full hover:bg-gray-300/25 focus:ring-0 z-50"
 	on:click={() => toggleTheme()}
 >
 	<svg

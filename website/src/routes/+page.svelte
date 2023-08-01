@@ -1,12 +1,15 @@
 <script lang="ts">
-	import windowSizeStore from '$lib/stores/windowSize'
+	import DisplacementSphere from '$lib/components/displacementSphere/DisplacementSphere.svelte';
 
-    $: console.log($windowSizeStore); 
+	
+	import ThreeTest from '$lib/components/displacementSphere/ThreeTest.svelte';
+	import windowSizeStore from '$lib/stores/windowSize';
 </script>
+
 <main>
-    <p>hello</p>
+	
+	<DisplacementSphere />
 </main>
 
-<style >
-
+<style>
 </style>
