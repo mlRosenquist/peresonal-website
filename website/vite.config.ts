@@ -5,5 +5,11 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
+	},
+	build: {
+		sourcemap: true
+	  },
+	  css: {
+        devSourcemap: true,
+    }
 });
