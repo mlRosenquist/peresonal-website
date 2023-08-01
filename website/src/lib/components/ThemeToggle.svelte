@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Button } from 'flowbite-svelte';
 
 	const STORAGE_KEY = 'theme';
 	const DARK_PREFERENCE = '(prefers-color-scheme: dark)';
@@ -48,10 +47,8 @@
 	});
 </script>
 
-<Button
+<button
 	id="theme-toggle"
-	color={'none'}
-	shadow={false}
 	class="fixed right-[48px] top-[48px] p-0 w-[48px] h-[48px] rounded-full hover:bg-gray-300/25 focus:ring-0"
 	on:click={() => toggleTheme()}
 >
@@ -76,7 +73,7 @@
 		/>
 		<circle class="circles" cx="19" cy="19" r="12" mask="url(#theme-toggle-mask-2)" />
 	</svg>
-</Button>
+</button>
 
 <style>
 	.circles {
@@ -98,13 +95,13 @@
 
 	:global(body.dark) .circles {
 		fill: white;
-		transform: none; /**Different*/
+		transform: none; 
 		transform-origin: center;
 
 		@media (prefers-reduced-motion: no-preference) {
 			transition-property: transform, fill;
 			transition-duration: 600ms;
-			transition-delay: 0.3s; /**Different*/
+			transition-delay: 0.3s; 
 			transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 		}
 
@@ -125,11 +122,11 @@
 
 	:global(body.dark) .mask {
 		fill: black;
-		transform: none; /**Different*/
+		transform: none; 
 
 		@media (prefers-reduced-motion: no-preference) {
 			transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
-			transition-delay: 0.3s; /**Different*/
+			transition-delay: 0.3s; 
 		}
 	}
 
@@ -156,14 +153,14 @@
 		stroke-linecap: round;
 		stroke-width: 3;
 		stroke-dasharray: 7 7;
-		stroke-dashoffset: 7; /**Different*/
-		opacity: 0; /**Different*/
+		stroke-dashoffset: 7; 
+		opacity: 0; 
 
 		@media (prefers-reduced-motion: no-preference) {
 			transition-property: stroke-dashoffset, opacity;
 			transition-duration: 600ms;
 			transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-			transition-delay: 0s; /**Different*/
+			transition-delay: 0s; 
 		}
 	}
 </style>

@@ -4,7 +4,7 @@
 	import './styles.css';
 </script>
 
-<div class="test">
+<div >
 	<Header />
 
 	<slot />

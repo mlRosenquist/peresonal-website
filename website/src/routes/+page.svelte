@@ -1,7 +1,9 @@
 <script lang="ts">
 	
 </script>
-<div></div>
+<main>
+    <p>hello</p>
+</main>
 
 <style >
 
