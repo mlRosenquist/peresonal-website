@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { writable, type Readable } from 'svelte/store';
-	import { animate, useReducedMotion, useSpring } from 'framer-motion';
+	import { writable, type Readable, readable } from 'svelte/store';
 	import {
 		AmbientLight,
 		Color,
@@ -19,9 +18,11 @@
 	} from 'three';
 	import { cleanRenderer, cleanScene, removeLights, rgbToThreeColor } from './utils';
 	import { THEMES, themeStore } from '$lib/stores/themeStore';
-	import type { Unsubscriber } from 'svelte/motion';
+
 	import windowSizeStore, { type WindowSize } from '$lib/stores/windowSize';
 	import inViewport from '$lib/stores/inViewPort';
+	import { spring } from 'svelte/motion';
+	import shaders from './shaders'
 
 	const springConfig = {
 		stiffness: 30,
@@ -49,27 +50,16 @@
 	let geometry: SphereGeometry;
 	let sphere: Mesh;
 	let reduceMotion = false;
-	const rotationX = useSpring(0, springConfig);
-	const rotationY = useSpring(0, springConfig);
+	const rotationX = spring(0, springConfig);
+	const rotationY = spring(0, springConfig);
 
 	let theme: string;
 	const rgbBackground = writable<string>('17 17 17');
 	const colorWhite = writable<string>('0xFFFFFF');
 
-	let fragShader = '';
-	let vertShader = '';
-
 	onMount(async () => {
-		const fragResponse = await fetch('./displacementSphereFragment.glsl');
-		const vertResponse = await fetch('./displacementSphereVertex.glsl');
-
-		fragShader = await fragResponse.text();
-		vertShader = await vertResponse.text();
-		// now you can use fragShader and vertShader as strings
-	});
-
-	onMount(() => {
 		const { innerWidth, innerHeight } = window;
+
 		mouse = new Vector2(0.8, 0.5);
 		renderer = new WebGLRenderer({
 			canvas: canvasRef,
@@ -88,12 +78,12 @@
 		scene = new Scene();
 
 		material = new MeshPhongMaterial();
-		material.onBeforeCompile = (shader: any) => {
+		material.onBeforeCompile = async (shader: any) => {
 			uniforms = UniformsUtils.merge([shader.uniforms, { time: { type: 'f', value: 0 } }]);
 
 			shader.uniforms = uniforms;
-			shader.vertexShader = vertShader;
-			shader.fragmentShader = fragShader;
+			shader.vertexShader = shaders.vertexShader;
+			shader.fragmentShader = shaders.fragmentShader;
 		};
 
 		geometry = new SphereGeometry(32, 128, 128);
@@ -102,62 +92,68 @@
 		// sphere.modifier = Math.random();
 		scene.add(sphere);
 
-		onDestroy(() => {
-			cleanRenderer(renderer);
-			cleanScene(scene);
-		});
-	});
-
-	onMount(() => {
-		const themeStoreUnSub = themeStore.subscribe((value) => (theme = value));
-
-		onDestroy(() => {
-			themeStoreUnSub();
-			removeLights(lights);
-		});
-	});
-
-	$: {
 		const dirLight = new DirectionalLight(0xffffff, 0.6);
-		const ambientLight = new AmbientLight(0xffffff, theme == THEMES.LIGHT ? 0.8 : 0.1);
+			const ambientLight = new AmbientLight(0xffffff, theme == THEMES.LIGHT ? 0.8 : 0.1);
 
-		dirLight.position.z = 200;
-		dirLight.position.x = 100;
-		dirLight.position.y = 100;
+			dirLight.position.z = 200;
+			dirLight.position.x = 100;
+			dirLight.position.y = 100;
 
-		lights = [dirLight, ambientLight];
-		scene.background = new Color(...rgbToThreeColor('17 17 17'));
-		lights.forEach((light) => scene.add(light));
-	}
+			lights = [dirLight, ambientLight];
+			scene.background = new Color(... rgbToThreeColor("17 17 17"));
+			lights.forEach((light) => scene.add(light));
+
+			const animate = () => {
+				requestAnimationFrame(animate);
+				if (uniforms !== undefined) uniforms.time.value = 0.00005 * (Date.now() - start);
+
+				sphere.rotation.z += 0.001;
+				sphere.rotation.x = $rotationX;
+				sphere.rotation.y = $rotationY;
+
+				renderer.render(scene, camera);
+			};
+			animate();
+
+			// if (!reduceMotion && inViewValue) {
+				// window.addEventListener('mousemove', onMouseMove);	
+	});
+
+	onDestroy(() => {
+		cleanRenderer(renderer);
+		cleanScene(scene);
+		removeLights(lights);
+	});
 
 	let windowSize: WindowSize;
 	onMount(() => {
+		const themeStoreUnSub = themeStore.subscribe((value) => (theme = value));
 		const windowSizeStoreUnSub = windowSizeStore.subscribe((value) => (windowSize = value));
-
-		onDestroy(() => {
-			windowSizeStoreUnSub();
-		});
 	});
 
+
 	$: {
-		const { width, height } = windowSize;
+		if (windowSize && renderer && sphere && camera) {
+			console.log("3. reactive");
+			const { width, height } = windowSize;
 
-		const adjustedHeight = height + height * 0.3;
-		renderer.setSize(width, adjustedHeight);
-		camera.aspect = width / adjustedHeight;
-		camera.updateProjectionMatrix();
+			const adjustedHeight = height + height * 0.3;
+			renderer.setSize(width, adjustedHeight);
+			camera.aspect = width / adjustedHeight;
+			camera.updateProjectionMatrix();
 
-		if (reduceMotion) renderer.render(scene, camera);
+			if (reduceMotion) renderer.render(scene, camera);
 
-		if (width <= media.mobile) {
-			sphere.position.x = 14;
-			sphere.position.y = 10;
-		} else if (width <= media.tablet) {
-			sphere.position.x = 18;
-			sphere.position.y = 14;
-		} else {
-			sphere.position.x = 22;
-			sphere.position.y = 16;
+			if (width <= media.mobile) {
+				sphere.position.x = 14;
+				sphere.position.y = 10;
+			} else if (width <= media.tablet) {
+				sphere.position.x = 18;
+				sphere.position.y = 14;
+			} else {
+				sphere.position.x = 22;
+				sphere.position.y = 16;
+			}
 		}
 	}
 
@@ -166,59 +162,56 @@
 	onMount(() => {
 		inViewSub = inViewport(canvasRef, true, {}, true);
 		const inViewUnSub = inViewSub.subscribe((value) => (inViewValue = value));
-
-		onDestroy(() => {
-			inViewUnSub();
-			onMouseMove && window.removeEventListener('mousemove', onMouseMove);
-		})
 	});
-	
-	let onMouseMove: ((event: MouseEvent) => void) | undefined;
-	$: {
-		onMouseMove = (event: MouseEvent) => {
-			const position = {
-				x: event.clientX / window.innerWidth,
-				y: event.clientY / window.innerHeight
-			};
 
-			rotationX.set(position.y / 2);
-			rotationY.set(position.x / 2);
-		};
-
-		if (!reduceMotion && inViewValue) {
-			window.addEventListener('mousemove', onMouseMove);
-		}
-	}
-	let animation: number; 
-	$: {
-		const animate = () => {
-			animation = requestAnimationFrame(animate)
-
-			if (uniforms !== undefined) 
-				uniforms.time.value = 0.00005 * (Date.now() - start);
-
-			sphere.rotation.z += 0.001;
-			sphere.rotation.x = rotationX.get();
-			sphere.rotation.y = rotationY.get();
-
-			renderer.render(scene, camera);
-		};
-
-		if(!reduceMotion && inViewValue){
-			animate();
-		}
-		else {
-			renderer.render(scene, camera);
-		}
-	}
 	onDestroy(() => {
-		cancelAnimationFrame(animation);
-	})
+		//inViewUnSub();
+		onMouseMove && window && window.removeEventListener('mousemove', onMouseMove);
+	});
+
+	let onMouseMove: ((event: MouseEvent) => void) | undefined;
+	let animation: number;
+	// $: {
+	// 	if (renderer && typeof window !== 'undefined') {
+	// 		console.log("5. reactive");
+	// 		onMouseMove = (event: MouseEvent) => {
+	// 			const position = {
+	// 				x: event.clientX / window.innerWidth,
+	// 				y: event.clientY / window.innerHeight
+	// 			};
+
+	// 			rotationX.set(position.y / 2);
+	// 			rotationY.set(position.x / 2);
+	// 		};
+
+	// 		const animate = () => {
+	// 			requestAnimationFrame(animate);
+	// 			if (uniforms !== undefined) uniforms.time.value = 0.00005 * (Date.now() - start);
+
+	// 			sphere.rotation.z += 0.001;
+	// 			sphere.rotation.x = $rotationX;
+	// 			sphere.rotation.y = $rotationY;
+
+	// 			renderer.render(scene, camera);
+	// 		};
+
+	// 		if (!reduceMotion && inViewValue) {
+	// 			window.addEventListener('mousemove', onMouseMove);
+	// 			animate();
+				
+	// 		} else {
+	// 			renderer.render(scene, camera);
+	// 		}
+	// 	}
+	// }
+	onDestroy(() => {
+		if (typeof window !== 'undefined') {
+			window.cancelAnimationFrame(animation);
+		}
+	});
 </script>
 
-<Transition in={{ duration: 3000 }}>
-	<canvas aria-hidden class={styles.canvas} bind:this={canvasRef} />
-</Transition>
+<canvas aria-hidden data-visible='true' class="canvas" bind:this={canvasRef} />
 
 <style>
 	.canvas {
