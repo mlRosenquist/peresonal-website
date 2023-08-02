@@ -1,6 +1,8 @@
 <script>
-	import HomeIcon from './HomeIcon.svelte';
-	import ThemeToggle from './ThemeToggle.svelte';
+	import HomeIcon from "$lib/components/Header/HomeIcon.svelte";
+	import ThemeToggle from "$lib/components/Header/ThemeToggle.svelte";
+
+	
 
 	const routes = [
 		{ url: '/about', name: 'About' },
@@ -53,7 +55,11 @@
 
 <style lang="postcss">
 	p {
-		@apply rotate-[270deg];
+		@apply rotate-[270deg] transition-colors duration-300;
+	}
+
+	:global(body.dark) p {
+		@apply text-white/80;
 	}
 
 	p::after {
@@ -66,7 +72,7 @@
 		background-color: rgb(76, 204, 204);
 		transform: scaleX(0);
 		transform-origin: right;
-		transition: transform 0.3s ease-in-out;
+		transition: transform 0.3s ;
 	}
 
 	p:hover::after {
@@ -99,4 +105,11 @@
 	svg {
 		@apply fill-[rgba(0,0,0,0.6)] hover:fill-[rgb(76,204,204)] hover:ease-in-out transition duration-300;
 	}
+
+	:global(body.dark) svg {
+		@apply fill-white/80 hover:fill-[rgb(76,204,204)] hover:ease-in-out transition duration-300;
+		
+	}
+
+
 </style>

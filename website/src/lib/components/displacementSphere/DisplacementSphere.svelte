@@ -26,8 +26,9 @@
 
 	import windowSizeStore, { type WindowSize } from '$lib/stores/windowSize';
 	import inViewport from '$lib/stores/inViewPort';
-	import { spring } from 'svelte/motion';
+	import { spring, tweened } from 'svelte/motion';
 	import shaders from './shaders';
+	import { cubicOut } from 'svelte/easing';
 
 	const springConfig = {
 		stiffness: 1000,
@@ -63,8 +64,17 @@
 	let inViewValue: boolean = true;
 	let mounted: boolean = false;
 
+	const opacity = tweened(0);
+
 	onMount(() => {
-		const themeStoreUnSub = themeStore.subscribe((value) => (theme = value));
+		const themeStoreUnSub = themeStore.subscribe((value) => {
+			theme = value;
+			opacity.set(0)
+				.then(() => {
+					opacity.set(1, {duration: 3000, easing: cubicOut})
+				})
+		});
+
 		const windowSizeStoreUnSub = windowSizeStore.subscribe((value) => (windowSize = value));
 		const inViewSub = inViewport(canvasRef, true, {}, true);
 		const inViewUnSub = inViewSub.subscribe((value) => (inViewValue = value));
@@ -219,20 +229,16 @@
 	})();
 </script>
 
-<canvas aria-hidden data-visible="true" class="canvas" bind:this={canvasRef} />
+<div
+	
+>
+	<canvas style="opacity: {$opacity}" aria-hidden class="canvas" bind:this={canvasRef} />
+</div>
 
-<style>
+<style lang="postcss">
 	.canvas {
 		position: absolute;
 		width: 100vw;
 		inset: 0;
-		opacity: 0;
-		transition-property: opacity;
-		transition-duration: 3s;
-		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
-		&[data-visible='true'] {
-			opacity: 1;
-		}
 	}
 </style>

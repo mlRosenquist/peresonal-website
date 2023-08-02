@@ -3,14 +3,5 @@
     width: 0px;  /* width of the entire scrollbar */
 }
 
-body {
-    background-color: #f2f2f2;
-    width: 100%;
-    overflow-x: hidden;
-    
-    transition: background-color 1s;
-}
-body.dark {
-    background-color: black;
-}
+
 

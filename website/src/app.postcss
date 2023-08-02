@@ -1,4 +1,11 @@
 /* Write your global styles here, in PostCSS syntax */
 @tailwind base;
 @tailwind components;
-@tailwind utilities
+@tailwind utilities;
+
+body {
+    @apply bg-['#ffffff'] w-['100%'] overflow-x-auto transition-colors duration-[3000] ease-linear;
+}
+body.dark {
+    @apply bg-black;
+}

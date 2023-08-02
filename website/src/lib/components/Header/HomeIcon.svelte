@@ -24,7 +24,7 @@
 	</svg>
 </a>
 
-<style>
+<style lang="postcss">
 	.icon-container {
 		position: relative;
 		width: 50px;
@@ -32,12 +32,19 @@
 	}
 
 	.icon {
+		
 		width: 100%;
 		height: 100%;
 	}
 
 	.base {
+		@apply transition-colors duration-300;
 		fill: rgba(0, 0, 0, 0.6);
+	}
+
+	:global(body.dark) .base {
+		
+		fill: white
 	}
 
 	.hover {
