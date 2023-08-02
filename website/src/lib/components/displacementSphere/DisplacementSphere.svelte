@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { writable, type Readable, readable } from 'svelte/store';
+	import { onMount } from 'svelte';
+
 	import {
-		AmbientLight,
 		Color,
-		DirectionalLight,
 		Mesh,
 		MeshPhongMaterial,
 		PerspectiveCamera,
@@ -16,16 +14,23 @@
 		SphereGeometry,
 		Light
 	} from 'three';
-	import { cleanRenderer, cleanScene, removeLights, rgbToThreeColor } from './utils';
+	import {
+		cleanRenderer,
+		cleanScene,
+		getAmbientLight,
+		getDirectionLight,
+		removeLights,
+		rgbToThreeColor
+	} from './utils';
 	import { THEMES, themeStore } from '$lib/stores/themeStore';
 
 	import windowSizeStore, { type WindowSize } from '$lib/stores/windowSize';
 	import inViewport from '$lib/stores/inViewPort';
 	import { spring } from 'svelte/motion';
-	import shaders from './shaders'
+	import shaders from './shaders';
 
 	const springConfig = {
-		stiffness: 30,
+		stiffness: 1000,
 		damping: 20,
 		mass: 2
 	};
@@ -54,10 +59,23 @@
 	const rotationY = spring(0, springConfig);
 
 	let theme: string;
-	const rgbBackground = writable<string>('17 17 17');
-	const colorWhite = writable<string>('0xFFFFFF');
+	let windowSize: WindowSize;
+	let inViewValue: boolean = true;
+	let mounted: boolean = false;
 
-	onMount(async () => {
+	onMount(() => {
+		const themeStoreUnSub = themeStore.subscribe((value) => (theme = value));
+		const windowSizeStoreUnSub = windowSizeStore.subscribe((value) => (windowSize = value));
+		const inViewSub = inViewport(canvasRef, true, {}, true);
+		const inViewUnSub = inViewSub.subscribe((value) => (inViewValue = value));
+
+		return () => {
+			themeStoreUnSub();
+			windowSizeStoreUnSub();
+			inViewUnSub;
+		};
+	});
+	onMount(() => {
 		const { innerWidth, innerHeight } = window;
 
 		mouse = new Vector2(0.8, 0.5);
@@ -78,7 +96,7 @@
 		scene = new Scene();
 
 		material = new MeshPhongMaterial();
-		material.onBeforeCompile = async (shader: any) => {
+		material.onBeforeCompile = (shader: any) => {
 			uniforms = UniformsUtils.merge([shader.uniforms, { time: { type: 'f', value: 0 } }]);
 
 			shader.uniforms = uniforms;
@@ -89,60 +107,42 @@
 		geometry = new SphereGeometry(32, 128, 128);
 		sphere = new Mesh(geometry, material);
 		sphere.position.z = 0;
-		// sphere.modifier = Math.random();
 		scene.add(sphere);
 
-		const dirLight = new DirectionalLight(0xffffff, 0.6);
-			const ambientLight = new AmbientLight(0xffffff, theme == THEMES.LIGHT ? 0.8 : 0.1);
+		mounted = true;
 
-			dirLight.position.z = 200;
-			dirLight.position.x = 100;
-			dirLight.position.y = 100;
+		return () => {
+			cleanScene(scene);
+			cleanRenderer(renderer);
+		};
+	});
 
-			lights = [dirLight, ambientLight];
-			scene.background = new Color(... rgbToThreeColor("17 17 17"));
+	$: _cleanupLights = (() => {
+		if (_cleanupLights) {
+			_cleanupLights();
+		}
+		if (typeof window != 'undefined' && mounted) {
+			lights = [getDirectionLight(theme), getAmbientLight(theme)];
+			scene.background = new Color(
+				...rgbToThreeColor(theme == THEMES.LIGHT ? '242 242 242' : '17 17 17')
+			);
+
 			lights.forEach((light) => scene.add(light));
-
-			const animate = () => {
-				requestAnimationFrame(animate);
-				if (uniforms !== undefined) uniforms.time.value = 0.00005 * (Date.now() - start);
-
-				sphere.rotation.z += 0.001;
-				sphere.rotation.x = $rotationX;
-				sphere.rotation.y = $rotationY;
-
-				renderer.render(scene, camera);
-			};
-			animate();
-
-			// if (!reduceMotion && inViewValue) {
-				// window.addEventListener('mousemove', onMouseMove);	
-	});
-
-	onDestroy(() => {
-		cleanRenderer(renderer);
-		cleanScene(scene);
-		removeLights(lights);
-	});
-
-	let windowSize: WindowSize;
-	onMount(() => {
-		const themeStoreUnSub = themeStore.subscribe((value) => (theme = value));
-		const windowSizeStoreUnSub = windowSizeStore.subscribe((value) => (windowSize = value));
-	});
-
+			renderer.render(scene, camera);
+		}
+		return () => {
+			removeLights(lights);
+		};
+	})();
 
 	$: {
-		if (windowSize && renderer && sphere && camera) {
-			console.log("3. reactive");
+		if (typeof window !== 'undefined' && mounted) {
 			const { width, height } = windowSize;
 
 			const adjustedHeight = height + height * 0.3;
 			renderer.setSize(width, adjustedHeight);
 			camera.aspect = width / adjustedHeight;
 			camera.updateProjectionMatrix();
-
-			if (reduceMotion) renderer.render(scene, camera);
 
 			if (width <= media.mobile) {
 				sphere.position.x = 14;
@@ -157,61 +157,69 @@
 		}
 	}
 
-	let inViewSub: Readable<boolean> | undefined;
-	let inViewValue: boolean;
-	onMount(() => {
-		inViewSub = inViewport(canvasRef, true, {}, true);
-		const inViewUnSub = inViewSub.subscribe((value) => (inViewValue = value));
-	});
-
-	onDestroy(() => {
-		//inViewUnSub();
-		onMouseMove && window && window.removeEventListener('mousemove', onMouseMove);
-	});
-
-	let onMouseMove: ((event: MouseEvent) => void) | undefined;
-	let animation: number;
-	// $: {
-	// 	if (renderer && typeof window !== 'undefined') {
-	// 		console.log("5. reactive");
-	// 		onMouseMove = (event: MouseEvent) => {
-	// 			const position = {
-	// 				x: event.clientX / window.innerWidth,
-	// 				y: event.clientY / window.innerHeight
-	// 			};
-
-	// 			rotationX.set(position.y / 2);
-	// 			rotationY.set(position.x / 2);
-	// 		};
-
-	// 		const animate = () => {
-	// 			requestAnimationFrame(animate);
-	// 			if (uniforms !== undefined) uniforms.time.value = 0.00005 * (Date.now() - start);
-
-	// 			sphere.rotation.z += 0.001;
-	// 			sphere.rotation.x = $rotationX;
-	// 			sphere.rotation.y = $rotationY;
-
-	// 			renderer.render(scene, camera);
-	// 		};
-
-	// 		if (!reduceMotion && inViewValue) {
-	// 			window.addEventListener('mousemove', onMouseMove);
-	// 			animate();
-				
-	// 		} else {
-	// 			renderer.render(scene, camera);
-	// 		}
-	// 	}
-	// }
-	onDestroy(() => {
-		if (typeof window !== 'undefined') {
-			window.cancelAnimationFrame(animation);
+	$: _cleanupMouseMove = (() => {
+		if (_cleanupMouseMove) {
+			_cleanupMouseMove();
 		}
-	});
+		let onMouseMove: (this: Window, ev: MouseEvent) => any;
+		if (typeof window !== 'undefined' && mounted) {
+			onMouseMove = (event: MouseEvent) => {
+				const position = {
+					x: event.clientX / window.innerWidth,
+					y: event.clientY / window.innerHeight
+				};
+
+				rotationX.set(position.y / 4);
+				rotationY.set(position.x / 4);
+			};
+
+			if (!reduceMotion && inViewValue) {
+				window.addEventListener('mousemove', onMouseMove);
+			}
+		}
+
+		return () => {
+			window.removeEventListener('mousemove', onMouseMove);
+		};
+	})();
+
+	$: {
+		if (mounted && reduceMotion) {
+			renderer.render(scene, camera);
+		}
+	}
+
+	$: _cleanupAnimation = (() => {
+		if (_cleanupAnimation) {
+			_cleanupAnimation();
+		}
+
+		let animation: number;
+		if (typeof window != 'undefined' && mounted) {
+			const animate = () => {
+				animation = requestAnimationFrame(animate);
+				if (uniforms) uniforms.time.value = 0.00005 * (Date.now() - start);
+
+				sphere.rotation.z += 0.0005;
+				sphere.rotation.x = $rotationX;
+				sphere.rotation.y = $rotationY;
+
+				renderer.render(scene, camera);
+			};
+
+			if (!reduceMotion && inViewValue) {
+				animate();
+			} else {
+				renderer.render(scene, camera);
+			}
+		}
+		return () => {
+			cancelAnimationFrame(animation);
+		};
+	})();
 </script>
 
-<canvas aria-hidden data-visible='true' class="canvas" bind:this={canvasRef} />
+<canvas aria-hidden data-visible="true" class="canvas" bind:this={canvasRef} />
 
 <style>
 	.canvas {
