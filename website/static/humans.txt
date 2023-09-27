@@ -1,0 +1,20 @@
+                            
+/* TEAM */
+
+Morten Lyng Rosenquist                            
+lyngrosenquistmorten@gmail.com 
+
+https://localhost:5173/contact
+                    
+
+/* THANKS */
+						
+Cody Bennet (https://codyb.co/) ~ the design is inspired from there
+
+
+/* SITE */
+                      
+Built using: 
+- SvelteKit
+- ThreeJS
+- tailwind.css

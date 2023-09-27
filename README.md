@@ -31,7 +31,7 @@ https://hamishw.com/contact/ is AWESOME
 ### Header 
 - HomeIcon transition
 ### Footer
-- Add this to layout
+- Anchor underline component
 
 ## Front page
 
@@ -60,4 +60,4 @@ https://hamishw.com/contact/ is AWESOME
 
 ## Other
 - Resume / CV download
-- Decide on icon
+- favicon

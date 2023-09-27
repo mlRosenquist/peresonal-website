@@ -1,19 +1,23 @@
 <script lang="ts">
 	import DisplacementSphere from '$lib/components/displacementSphere/DisplacementSphere.svelte';
+	import Intro from '$lib/components/intro/Intro.svelte'
 
+	import { register } from 'swiper/element/bundle';
+
+	register();
+
+	const roles = ['Developer', 'Engineer', 'Architect'];
 </script>
 
 <main>
-	<div class="h-[100vh] flex justify-center items-center flex-col  z-[200]">
-	
+	<section >
+		<DisplacementSphere />
+		<Intro></Intro>
+	</section>
 
-	<header class="relative -top-[24px]">
-		<h1>Morten Rosenquist</h1>
-		<h2>Developer</h2>
-	</header>
-	<DisplacementSphere />
-
-</div>
+	<section>
+		<div class="h-screen" />
+	</section>
 </main>
 
 <style>

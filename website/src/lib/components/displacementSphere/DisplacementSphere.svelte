@@ -229,16 +229,4 @@
 	})();
 </script>
 
-<div
-	
->
-	<canvas style="opacity: {$opacity}" aria-hidden class="canvas" bind:this={canvasRef} />
-</div>
-
-<style lang="postcss">
-	.canvas {
-		position: absolute;
-		width: 100vw;
-		inset: 0;
-	}
-</style>
+<canvas style="opacity: {$opacity}" aria-hidden class="canvas absolute z-100" bind:this={canvasRef} />
