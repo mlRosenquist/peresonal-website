@@ -1,14 +1,17 @@
 <script lang="ts">
 	import Footer from '$lib/components/footer/Footer.svelte';
-import '../app.postcss';
+	import '../app.postcss';
 	import Header from '../lib/components/header/Header.svelte';
 	import './styles.css';
 	
 </script>
 
-<div >
+<div class="flex flex-col min-h-screen">
 	<Header />
 
-	<slot />
+	<div class="flex-1">
+		<slot />
+	</div>
+
 	<Footer />
 </div>

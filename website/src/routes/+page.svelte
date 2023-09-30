@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DisplacementSphere from '$lib/components/displacementSphere/DisplacementSphere.svelte';
-	import Intro from '$lib/components/intro/Intro.svelte'
+	import Intro from '$lib/components/intro/Intro.svelte';
 
 	import { register } from 'swiper/element/bundle';
 
@@ -10,13 +10,12 @@
 </script>
 
 <main>
-	<section >
-		<DisplacementSphere />
-		<Intro></Intro>
+	<DisplacementSphere />
+	<section class="h-screen pt-[20vh] pr-[25vw] pl-[25vw] relative z-[1]">
+		<Intro />
 	</section>
-
-	<section>
-		<div class="h-screen" />
+	<section class="h-[50vh] z-[1]">
+		
 	</section>
 </main>
 

@@ -17,7 +17,7 @@
 	class="fixed left-[48px] top-[48px] bottom-[48px] w-[48px] flex flex-col space-y-12 items-center z-50"
 >
 	<HomeIcon />
-	<nav class="flex flex-col h-full justify-between">
+	<nav class="flex flex-col h-screen justify-between">
 		<div class="flex flex-col space-y-16">
 			<a href="/#timeline">
 				<p>Timeline</p>
