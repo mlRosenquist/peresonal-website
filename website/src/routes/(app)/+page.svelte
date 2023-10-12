@@ -11,7 +11,7 @@
 
 <main>
 	<DisplacementSphere />
-	<section class="h-screen pt-[20vh] pr-[25vw] pl-[25vw] relative z-[1]">
+	<section class="h-screen pt-[25vh] pr-[25vw] pl-[20vw] relative z-[1]">
 		<Intro />
 	</section>
 	<section class="h-[50vh] z-[1]">

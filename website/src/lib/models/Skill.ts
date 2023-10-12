@@ -7,7 +7,7 @@ export enum SkillType {
 }
 
 export enum SkillLevel {
-    Preferred = 'Preffered',
+    Preferred = 'Preferred',
     WorkingKnowledge = 'Working knowledge',
     Interested = 'Interested'
 }

@@ -1,34 +1,19 @@
 <script>
 	import HomeIcon from '$lib/components/header/HomeIcon.svelte';
 	import ThemeToggle from '$lib/components/header/ThemeToggle.svelte';
-
-	const routes = [
-		{ url: '/about', name: 'About' },
-		{ url: '/blogs', name: 'Blogs' },
-		{ url: '/projects', name: 'Projects' },
-		{ url: '/contact', name: 'Contact' }
-	];
 </script>
 
 <header
 	id="header"
-	class="fixed left-[48px] top-[48px] bottom-[48px] w-[48px] flex flex-col space-y-12 items-center z-50"
+	class="fixed left-8 top-8 bottom-8 w-8 flex flex-col space-y-12 items-center z-50"
 >
 	<HomeIcon />
 	<nav class="flex flex-col h-screen justify-between">
-		<div class="flex flex-col space-y-16">
-			<a href="/#timeline">
-				<p>Timeline</p>
-			</a>
-			<a href="/articles">
-				<p>Articles</p>
-			</a>
-			<a href="/about">
-				<p>About</p>
-			</a>
-			<a href="/contact">
-				<p>Contact</p>
-			</a>
+		<div class="flex flex-col space-y-16 items-center">
+			<div><a class="nav-element" href="/#timeline"> Timeline </a></div>
+			<div><a class="nav-element" href="/about"> About </a></div>
+			<div><a class="nav-element" href="/articles"> Articles </a></div>
+			<div><a class="nav-element" href="/contact"> Contact </a></div>
 		</div>
 
 		<div class="flex flex-col space-y-4 items-center">
@@ -54,8 +39,10 @@
 					fill="none"
 					viewBox="4 0 14 24"
 					stroke="currentColor"
-					>
-					<path d="M13 9h3.75M13 12h3.75M13 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/>
+				>
+					<path
+						d="M13 9h3.75M13 12h3.75M13 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
+					/>
 				</svg>
 			</a>
 		</div>
@@ -65,28 +52,22 @@
 
 <style lang="postcss">
 	.rounded-icon {
-		border-radius: 50%;
-		width: 24px;
-		height: 24px;
-		overflow: hidden;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
+		@apply inline-flex items-center justify-center overflow-hidden w-4 h-4 rounded-xl;
 	}
 
-	p {
-		@apply rotate-[270deg] transition-colors duration-300;
+	.nav-element {
+		@apply text-sm font-light inline-block pl-2 pr-2 rotate-[270deg] transition-colors duration-300;
 	}
 
-	:global(body.dark) p {
+	:global(body.dark) .nav-element {
 		@apply text-white/80;
 	}
 
-	p::after {
+	.nav-element::after {
 		content: '';
 		position: absolute;
 		left: 0;
-		top: 45%;
+		top: 50%;
 		height: 4px;
 		width: 100%;
 		background-color: rgb(76, 204, 204);
@@ -95,7 +76,7 @@
 		transition: transform 0.3s;
 	}
 
-	p:hover::after {
+	.nav-element:hover::after {
 		transform: scaleX(1);
 		transform-origin: left;
 	}
@@ -123,7 +104,7 @@
 	}
 
 	svg {
-		@apply fill-[rgba(0,0,0,0.6)] hover:fill-[rgb(76,204,204)] hover:ease-in-out transition duration-300;
+		@apply  fill-[rgba(0,0,0,0.6)] hover:fill-[rgb(76,204,204)] hover:ease-in-out transition duration-300;
 	}
 
 	:global(body.dark) svg {

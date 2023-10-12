@@ -1,11 +1,13 @@
 <script lang="ts">
 	import Anchor from './Anchor.svelte';
-	import type { Education } from './Education';
 	import EducationView from './EducationView.svelte';
-	import type { Experience } from './Experience';
 	import ExperienceView from './ExperienceView.svelte';
-	import type { Project } from './Project';
-	import { type Skill, SkillType, SkillLevel } from './Skill';
+	import ProjectView from './ProjectView.svelte';
+	import { type Skill, SkillType, SkillLevel } from '../../lib/models/Skill';
+	import SkillView from './SkillView.svelte';
+	import type { Education } from '$lib/models/Education';
+	import type { Experience } from '$lib/models/Experience';
+	import type { Project } from '$lib/models/Project';
 
 	const experiences: Experience[] = [
 		{
@@ -18,7 +20,7 @@
 				'Configuring and maintaining CI/CD pipelines together with having a strong focus on DX.'
 			],
 			location: 'Aarhus',
-			start: 'Sep 2019',
+			start: 'Aug 2019',
 			end: 'Present'
 		},
 		{
@@ -30,8 +32,8 @@
 				'Learned to work structured and disciplined to achieve a common goal.'
 			],
 			location: 'Aalborg',
-			start: 'Sep 2013',
-			end: 'Jul 2015'
+			start: 'Aug 2015',
+			end: 'Jun 2017'
 		},
 		{
 			image: 'riotgames.svg',
@@ -43,8 +45,8 @@
 				'Lived, travelled and worked together with a cohesive team.'
 			],
 			location: 'Worldwide',
-			start: 'Sep 2010',
-			end: 'Sep 2011'
+			start: 'Jul 2013',
+			end: 'Jul 2014'
 		}
 	];
 
@@ -57,7 +59,7 @@
 			],
 			location: 'Aarhus',
 			start: 'Sep 2017',
-			end: 'Jan 2020',
+			end: 'Jan 2021',
 			link: 'https://ece.au.dk/'
 		},
 		{
@@ -67,22 +69,35 @@
 				'Engaged in intensive research projects and benefited from guidance by renowned professors.'
 			],
 			location: 'Aarhus',
-			start: 'Jan 2020',
-			end: 'Jan 2022',
+			start: 'Jan 2021',
+			end: 'Jan 2023',
 			link: 'https://ece.au.dk/'
 		}
 	];
 
-	const projects: Project[] = [...Array(9).keys()].map((x) => ({
-		title: `Project Title ${x + 1}`,
-		link: `https://projectlink${x + 1}.com`,
-		logo: `projectlogo${x + 1}.png`,
-		description: `This is the description for Project Title ${
-			x + 1
-		}. It aims to showcase the diverse applications of Project ${
-			x + 1
-		} in real-world scenarios. The project integrates multiple technologies and provides solutions to various challenges faced in today's dynamic digital environment. It's a result of extensive research and collaboration among professionals.`
-	}));
+	const projects: Project[] = [
+		{
+			title: 'Website (Frontend)',
+			logo: 'github.svg',
+			link: 'https://github.com/mlRosenquist/personal-website-frontend',
+			description:
+				"Crafted my personal site's frontend using SvelteKit and TailwindCSS. The design prioritizes user experience, responsiveness, and aesthetic appeal."
+		},
+		{
+			title: 'Website (Backend)',
+			logo: 'github.svg',
+			link: 'https://github.com/mlRosenquist/personal-website-backend',
+			description:
+				'Architected the backend of my site with Golang. The structure emphasizes performance, scalability, and seamless user interactions.'
+		},
+		{
+			title: 'Home Server',
+			logo: 'github.svg',
+			link: 'https://github.com/mlRosenquist/personal-homeServer',
+			description:
+				'Established a self-hosted home server using Docker and Kubernetes. It hosts my site components and various open-source applications with Traefik as the reverse proxy.'
+		}
+	];
 
 	const skills: Skill[] = [
 		{
@@ -185,7 +200,20 @@
 	function getSkillsOfValueType(value: string) {
 		const key = getKeyByValue(value);
 		if (!key) return [];
-		return skills.filter((x) => x.type === SkillType[key]);
+		const filteredSkills = skills.filter((x) => x.type === SkillType[key]);
+
+		// Sorting based on the SkillLevel
+		filteredSkills.sort((a, b) => {
+			const order: { [key in SkillLevel]: number } = {
+				[SkillLevel.Preferred]: 1,
+				[SkillLevel.WorkingKnowledge]: 2,
+				[SkillLevel.Interested]: 3
+			};
+
+			return order[a.level] - order[b.level];
+		});
+
+		return filteredSkills;
 	}
 
 	const skillValues = Object.values(SkillType);
@@ -198,7 +226,7 @@
 		<p class="text-base font-normal leading-tight">Delegate</p>
 		<p class="text-base font-light leading-tight">graduated in 2023</p>
 	</span>
-	<div id="communication" class="flex flex-row space-x-8">
+	<div id="communication" class="flex flex-row space-x-8 justify-between">
 		<Anchor href="https://github.com/mlRosenquist" text="mlRosenquist">
 			<svg class="w-3 h-3" viewBox="0 0 20 20">
 				<path
@@ -263,35 +291,25 @@
 
 	<div>
 		<h3>Projects</h3>
-		<div class="grid grid-cols-3 grid-rows-3 gap-4">
+		<div class="grid grid-cols-3 grid-rows-1 gap-4">
 			{#each projects as project}
-				<div class="flex flex-col">
-					<span class="flex flex-row">
-						<a href={project.link}>
-							<p class="font-mono font-bold">
-								{project.title}
-							</p>
-						</a>
-						<img src={project.logo} />
-					</span>
-					<p class="text-sm text-justify break-words">{project.description}</p>
-				</div>
+				<ProjectView {project} />
 			{/each}
 		</div>
 	</div>
 
-	<div class="flex flex-col">
-		<div class="flex flex-row justify-between items-center">
+	<div class="flex flex-col pt-2">
+		<div class="pb-1 flex flex-row justify-between items-center">
 			<h3>Skills</h3>
 			<span class="flex flex-row space-x-1">
-				<div class="border-red-500 border-2 rounded-md">
-					<p class="m-[0.05rem]">{SkillLevel.Preferred}</p>
+				<div class="border-[#9e88ff] border-2 rounded-md">
+					<p class="text-[#9e88ff] font-medium text-xs m-[0.1rem]">{SkillLevel.Preferred}</p>
 				</div>
-				<div class="border-red-500 border-2 rounded-md">
-					<p class="m-[0.05rem]">{SkillLevel.WorkingKnowledge}</p>
+				<div class="border-[#81c8fe] border-2 rounded-md">
+					<p class="text-[#81c8fe] font-medium text-xs m-[0.1rem]">{SkillLevel.WorkingKnowledge}</p>
 				</div>
-				<div class="border-red-500 border-2 rounded-md">
-					<p class="m-[0.05rem]">{SkillLevel.Interested}</p>
+				<div class="border-[#d5e2c6] border-2 rounded-md">
+					<p class="text-[#d5e2c6] font-medium text-xs m-[0.1rem]">{SkillLevel.Interested}</p>
 				</div>
 			</span>
 		</div>
@@ -299,12 +317,10 @@
 		<div class="grid grid-rows-3 grid-cols-3 gap-4">
 			{#each skillValues as value}
 				<div>
-					<p>{value}</p>
+					<p class="text-sm mb-1">{value}</p>
 					<div class="flex flex-row space-x-1">
 						{#each getSkillsOfValueType(value) as skill}
-							<div class="border-2 rounded-md border-red-200">
-								<p class="m-[0.05rem]">{skill.name}</p>
-							</div>
+							<SkillView {skill} />
 						{/each}
 					</div>
 				</div>
@@ -315,18 +331,6 @@
 
 <style lang="postcss">
 	h3 {
-		@apply text-[18px] font-normal pb-1;
-	}
-
-	#communication > a > span {
-		@apply flex flex-row items-center space-x-[0.1rem];
-	}
-
-	#communication > a > span > svg {
-		@apply w-3 h-3 fill-[#4ccccc]/50 stroke-[#4ccccc]/50;
-	}
-
-	#communication > a > span > p {
-		@apply text-xs text-[#4ccccc];
+		@apply text-[18px] font-medium pb-1;
 	}
 </style>

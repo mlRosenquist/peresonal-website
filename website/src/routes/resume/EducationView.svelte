@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Education } from './Education';
+	import type { Education } from "$lib/models/Education";
 
 	export let education: Education;
 </script>

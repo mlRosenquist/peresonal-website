@@ -4,7 +4,7 @@
 </script>
 
 <a {href}>
-	<span class="flex flex-row items-center">
+	<span class="flex flex-row items-center hover:underline">
 		<slot />
 		<p class="text-xs">{text}</p>
 	</span>
