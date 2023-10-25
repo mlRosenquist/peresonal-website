@@ -9,7 +9,7 @@
 		<p class="font-mono font-medium">
 			{project.title}
 		</p>
-		<img class="w-4 h-4" src={project.logo} />
+		<img alt="" class="w-4 h-4" src={project.logo} />
 	</a>
 
 	<p class="text-xs text-justify break-words">{project.description}</p>

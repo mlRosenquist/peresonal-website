@@ -6,7 +6,7 @@
 
 <div class="flex flex-row items-start">
 	<div class="h-14 w-14">
-		<img class="h-full w-full" src={experience.image} />
+		<img alt="" class="h-full w-full" src={experience.image} />
 	</div>
 	
 	<div class="flex flex-col w-full">

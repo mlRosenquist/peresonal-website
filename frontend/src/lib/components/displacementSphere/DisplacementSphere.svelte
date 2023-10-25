@@ -229,4 +229,4 @@
 	})();
 </script>
 
-<canvas style="opacity: {$opacity}" aria-hidden class="canvas absolute" bind:this={canvasRef} />
+<canvas style="opacity: {$opacity}" aria-hidden class="canvas absolute z-[-1]" bind:this={canvasRef} />

@@ -4,8 +4,6 @@
 
 ## Tailwindcss
 
-## DaisyUI / Flowbite
-
 ## Vite & ViteTest
 
 ## Framer Motions / Svelte Motion

@@ -10,9 +10,8 @@
 	<HomeIcon />
 	<nav class="flex flex-col h-screen justify-between">
 		<div class="flex flex-col space-y-16 items-center">
-			<div><a class="nav-element" href="/#timeline"> Timeline </a></div>
-			<div><a class="nav-element" href="/about"> About </a></div>
 			<div><a class="nav-element" href="/articles"> Articles </a></div>
+			<div><a class="nav-element" href="/#about"> About </a></div>
 			<div><a class="nav-element" href="/contact"> Contact </a></div>
 		</div>
 
