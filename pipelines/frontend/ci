@@ -1,9 +1,4 @@
-node {
-    agent {
-        docker {
-            image 'node:20-alpine'
-        }
-    }
+node('nodejs') {
 
     stage('Clone repository') {
         checkout scm
@@ -17,7 +12,6 @@ node {
         }
     }
     
-
     stage('Build project') {
         dir('frontend'){
             sh 'yarn build'

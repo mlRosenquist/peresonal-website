@@ -1,9 +1,4 @@
-node {
-    agent {
-        docker {
-            image 'golang'
-        }
-    }
+node('golang') {
 
     stage('Clone repository') {
         checkout scm
