@@ -1,0 +1,30 @@
+node {
+    agent {
+        docker {
+            image 'node:20-alpine'
+        }
+    }
+
+    stage('Clone repository') {
+        checkout scm
+    }
+
+    stage('Node.js setup') {
+        dir('frontend'){
+            sh 'node -v'
+            sh 'yarn -v'
+            sh 'yarn'
+        }
+    }
+    
+
+    stage('Build project') {
+        dir('frontend'){
+            sh 'yarn build'
+        }
+    }
+
+    stage('Test Project') {
+
+    }
+}
