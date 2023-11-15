@@ -1,3 +1,7 @@
-FROM jenkins/jnlp-agent-node
+FROM jenkins/inbound-agent:alpine
 
-RUN apk add --update docker openrc
+USER root
+
+RUN apk -U add docker openrc
+
+USER jenkins
