@@ -5,7 +5,7 @@ node('docker') {
         checkout scm
     }
 
-    stage('Build image12345678') {
+    stage('Build image123456789') {
         dir('frontend'){
             app = docker.build("mortenlyngosenquist/personal-website-frontend")
         }
