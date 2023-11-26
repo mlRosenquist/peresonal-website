@@ -12,7 +12,6 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-//
 // @title Echo Swagger Example API
 // @version 1.0
 // @description This is a sample server server.
