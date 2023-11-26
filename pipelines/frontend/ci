@@ -4,7 +4,7 @@ node('nodejs') {
         checkout scm
     }
 
-    stage('Node.js setup') {
+    stage('Node.js setup1') {
         dir('frontend'){
             sh 'node -v'
             sh 'yarn -v'
