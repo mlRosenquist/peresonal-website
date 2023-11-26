@@ -17,7 +17,7 @@
 			descriptions: [
 				'Scoping, Designing and Architecturing IT solutions at customers in various domains.',
 				'Implementing and maintaining CRM systems and integrations, primarily consisting of various azure components.',
-				'Configuring and maintaining CI/CD pipelines together with having a strong focus on DX.'
+				'Configuring and maintaining CI/CD pipelines together with having a strong focus on Developer Experience.'
 			],
 			location: 'Aarhus',
 			start: 'Aug 2019',
