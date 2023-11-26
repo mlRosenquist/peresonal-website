@@ -7,7 +7,7 @@
 
 	register();
 
-	const roles = ['Developer', 'Engineer', 'Architect'];
+	const roles = ['Developerr', 'Engineer', 'Architect'];
 </script>
 
 <main>
