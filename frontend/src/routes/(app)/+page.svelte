@@ -6,8 +6,6 @@
 	import { register } from 'swiper/element/bundle';
 
 	register();
-
-	const roles = ['Developerr', 'Engineer', 'Architect'];
 </script>
 
 <main>
