@@ -7,5 +7,6 @@
 	<span class="flex flex-row items-center hover:underline">
 		<slot />
 		<p class="text-xs">{text}</p>
+		<div></div>
 	</span>
 </a>
