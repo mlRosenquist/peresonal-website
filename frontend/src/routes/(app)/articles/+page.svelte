@@ -1,12 +1,7 @@
 <script lang="ts">
-	import {hej} from './Section';
-	// @ts-ignore
-	import Section from './Section.svx';
+	import SvelteMarkdown from 'svelte-markdown';
 </script>
 
 <main class="pt-[10vh] pr-[10vw] pl-[10vw]">
-	<Section />
+	<SvelteMarkdown source={''} />
 </main>
-
-<style>
-</style>
